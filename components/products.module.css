@@ -1,0 +1,10 @@
+.productsContainer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem 2rem;
+}
+
+.productItem {
+	width: 200px;
+}

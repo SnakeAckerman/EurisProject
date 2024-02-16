@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styles from './layout.module.css';
 import Link from 'next/link';
 import Shop from './shop';
+import { Card, CardBody } from '@nextui-org/react';
 
 export const siteTitle = 'Euris Test Project';
 
@@ -36,7 +37,11 @@ export default function Layout({ children, home }) {
 						</>
 					)}
 			</header>
-			<main className={styles.container}>{children}</main>
+			<Card className={styles.container}>
+				<CardBody>
+					{children}
+				</CardBody>
+			</Card>
 		</>
 	);
 }

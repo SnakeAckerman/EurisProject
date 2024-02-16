@@ -1,5 +1,5 @@
 import { SWRConfig } from 'swr';
-import '../styles/global.css';
+import '../styles/global_compiled.css';
 
 export const fetcher = url => fetch(url).then(r => r.json());
 

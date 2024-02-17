@@ -9,7 +9,7 @@ export default function Home() {
 			<Head>
 				<title>{siteTitle}</title>
 			</Head>
-			<section>
+			<section className='flex justify-center font-sans py-8'>
 				<Products></Products>
 			</section>
 		</Layout>

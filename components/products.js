@@ -1,13 +1,12 @@
 import useSWR from "swr";
 import { mainStoreId } from '../app/constants';
-import { CardHeader, Divider, ScrollShadow } from "@nextui-org/react";
+import { CardHeader } from "@nextui-org/react";
 import { Card, CardBody } from '@nextui-org/react';
+import ProductItem from "./productItem";
 
 export default function Products() {
 
-	const { data, error, isLoading } = useSWR(`https://us-central1-test-b7665.cloudfunctions.net/api/stores/${mainStoreId}/products`);
-
-	function productCardOnPress() { }
+	const { data, isLoading } = useSWR(`https://us-central1-test-b7665.cloudfunctions.net/api/stores/${mainStoreId}/products`);
 
 	if (isLoading) {
 		return (
@@ -27,18 +26,7 @@ export default function Products() {
 				<CardBody>
 					<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
 						{data.map(product => (
-							<Card key={product?.id} isPressable onPress={productCardOnPress} className="max-w-96">
-								<CardHeader className="text-lg justify-center">{product?.data?.title}</CardHeader>
-								<Divider />
-								<CardBody>
-									<ScrollShadow className="w-100 h-[100px]">
-										{product?.data?.description ? <p>{product?.data?.description}</p> : ''}
-									</ScrollShadow>
-									{product?.data?.category ? <p className="font-bold text-end">{product?.data?.category}</p> : ''}
-									{product?.data?.price ? <p className="font-bold text-end">{product?.data?.price} €</p> : ''}
-								</CardBody>
-							</Card>
-						))}
+							<ProductItem key={product?.id} product={product}></ProductItem>))}
 					</div>
 				</CardBody>
 			</Card>

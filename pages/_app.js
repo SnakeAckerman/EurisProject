@@ -7,7 +7,7 @@ export const fetcher = url => fetch(url).then(r => r.json());
 export default function App({ Component, pageProps }) {
 	return <SWRConfig value={
 		{
-			fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+			fetcher: (resource, init) => fetch(resource, init).then(res => res.status == 200 && res.json())
 		}
 	}>
 		<Providers>

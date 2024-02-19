@@ -3,6 +3,7 @@ import '../styles/global_compiled.css';
 import { Providers } from '../app/providers';
 
 export const fetcher = url => fetch(url).then(r => r.json());
+export const deleteFetcher = url => fetch(url, { method: 'DELETE' }).then(r => r.json());
 
 export default function App({ Component, pageProps }) {
 	return <SWRConfig value={

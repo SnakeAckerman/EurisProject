@@ -4,37 +4,37 @@ import { mainStoreId } from "../../app/constants";
 import { Button, Card, CardBody, CardHeader, CircularProgress, Divider, Link } from "@nextui-org/react";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { useState } from "react";
-import { deleteFetcher } from "../_app";
+import { deleteFetcher, getFetcher } from "../_app";
 
 export default function ProductDetail() {
 
 	const router = useRouter();
 	const { id } = router.query;
 
-	const { data, isLoading } = useSWR(`https://us-central1-test-b7665.cloudfunctions.net/api/stores/${mainStoreId}/products/${id}`);
-	const [isDeleting, setIsDeleting] = useState(false);
+	const { data: productData, isLoading: isProductLoading } = useSWR(id ? `https://us-central1-test-b7665.cloudfunctions.net/api/stores/${mainStoreId}/products/${id}` : '', getFetcher);
+	const [isProductDeleting, setIsProductDeleting] = useState(false);
 
-	const descriptionBlock = data?.description ? (
+	const descriptionBlock = productData?.description ? (
 		<>
 			<div className="flex align-start">
 				<p className="w-[100px] shrink-0">Description:</p>
-				<strong>{data.description}</strong>
+				<strong>{productData.description}</strong>
 			</div>
 			<Divider className="my-4" />
 		</>
 	) : '';
 
-	const categoryBlock = data?.category ? (
+	const categoryBlock = productData?.category ? (
 		<>
 			<div className="flex align-start">
 				<p className="w-[100px] shrink-0">Category:</p>
-				<strong>{data.category}</strong>
+				<strong>{productData.category}</strong>
 			</div>
 			<Divider className="my-4" />
 		</>
 	) : '';
 
-	const priceBlock = data?.price ? (
+	const priceBlock = productData?.price ? (
 		<>
 			<div className="flex align-start">
 				<p className="w-[100px] shrink-0">Price:</p>
@@ -42,18 +42,26 @@ export default function ProductDetail() {
 					new Intl.NumberFormat('it-IT', {
 						style: 'currency',
 						currency: 'EUR'
-					}).format(data.price)
+					}).format(productData.price)
 				}</strong>
 			</div>
 			<Divider className="my-4" />
 		</>
 	) : '';
 
-	function deleteButtonOnPress() {
+	const deleteButtonOnPress = async () => {
 
-		setIsDeleting(!isDeleting);
-		const deleteResponse = useSWR(`https://us-central1-test-b7665.cloudfunctions.net/api/stores/${mainStoreId}/products/${id}`, deleteFetcher);
-		debugger;
+		setIsProductDeleting(!isProductDeleting);
+
+		if (id) {
+
+			const deleteResponse = await fetch(`https://us-central1-test-b7665.cloudfunctions.net/api/stores/${mainStoreId}/products/${id}`, { method: 'DELETE' });
+
+			if (deleteResponse.ok) {
+				router.push('/');
+			}
+
+		}
 
 	}
 
@@ -64,28 +72,33 @@ export default function ProductDetail() {
 					<IoArrowBackCircleSharp size='2rem' />
 				</Link>
 				<h2 className="w-full text-center me-[32px]">
-					{isLoading ?
+					{isProductLoading ?
 						'Product'
 						:
-						data?.title
+						productData?.title
 					}
 				</h2>
 			</CardHeader>
 			<Divider />
 			<CardBody>
-				<div className="flex justify-center">
-					<div className="md:w-1/2">
-						{isLoading ?
-							<div className="flex justify-center">
-								<CircularProgress size="lg" aria-label="Loading..." />
-							</div>
-							: ''}
-						{descriptionBlock}
-						{categoryBlock}
-						{priceBlock}
+				{isProductLoading ?
+					<div className="flex justify-center">
+						<CircularProgress size="lg" aria-label="Loading..." />
 					</div>
-				</div>
-				<Button className="w-[200px]" onPress={deleteButtonOnPress} color="danger" size="lg" isDisabled={isDeleting}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
+					:
+					<>
+						<div className="flex justify-center">
+							<div className="md:w-1/2">
+								{descriptionBlock}
+								{categoryBlock}
+								{priceBlock}
+							</div>
+						</div>
+						<div className="flex justify-center">
+							{id ? (<Button className="w-[200px]" onPress={deleteButtonOnPress} color="danger" size="lg" isDisabled={isProductDeleting}>{isProductDeleting ? 'Deleting...' : 'Delete'}</Button>) : ''}
+						</div>
+					</>
+				}
 			</CardBody>
 		</Card>
 	</>

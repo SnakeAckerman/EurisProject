@@ -21,17 +21,13 @@ export default function CategoriesChart() {
 	const data = rawData?.map(item => item.numberOfProducts);
 	const backgroundColors = labels?.map(() => getRandomColor());
 
-	if (backgroundColors) {
-		debugger;
-	}
-
 	const chartData = {
 		labels: labels,
 		datasets: [
 			{
-				label: '# of Products per Category',
+				label: 'Products per Category',
 				data: data,
-				backgroundColor: [backgroundColors],
+				backgroundColor: backgroundColors,
 				borderWidth: 1,
 			},
 		],
@@ -53,7 +49,9 @@ export default function CategoriesChart() {
 					{isChartLoading ?
 						<CircularProgress size="lg" aria-label="Loading..." />
 						:
-						<PolarArea height={100} width={100} data={chartData} />
+						<div className="basis-32">
+							<PolarArea data={chartData} />
+						</div>
 					}
 				</div>
 			</CardBody>

@@ -38,7 +38,12 @@ export default function Products() {
 							<FaPlusCircle size='2rem' />
 						</Link>
 					</div>
-					<Button color="primary" onClick={() => { }}>
+					<Button
+						href="/CategoriesChart"
+						as={Link}
+						color="primary"
+						variant="solid"
+					>
 						<FaChartPie />
 					</Button>
 				</CardHeader>
